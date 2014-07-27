@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+        <link href="styles/main.css" rel="stylesheet">
+        <link href="joyride/ng-joyride.css" rel="stylesheet">
+        <script src="bower_components/jquery/jquery.js"></script>
+        <script src="bower_components/angular/angular.js"></script>
+        <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+        <script src="bower_components/angular-route/angular-route.js"></script>
+        <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+        <script src="main.js"></script>
+        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="joyride/ng-joyride.js"></script>
+<!--        <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.js">-->
+        
+    </head>
+    <body ng-app="demo" ng-controller="mainCtrl">
+        <div class="hide" fk-joy-ride="startJoyRide" config="config" on-finish="onFinish()"  on-skip="onFinish()"></div>
+        <div ng-view class="container" >
+            
+        </div>
+        
+    </body>
+</html>
