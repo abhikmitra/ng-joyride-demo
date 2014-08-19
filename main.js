@@ -26,11 +26,19 @@ angular.module('demo', [
             'AngularJS',
             'Karma'
         ];
+        var count = 0;
         $scope.startJoyRide = false;
         $scope.start = function () {
+            if(count > 0){
+                generateAlternateConfig();
+            }
+            count++;
             $scope.startJoyRide = true;
         }
-
+        function generateAlternateConfig(){
+            //This is to show that it can have dynamic configs which can change . The joyride would not need to be initialized again.
+            $scope.config[2].text = "I can have dynamic text that can change in between joyrides"
+        }
 
         $scope.config = [
 
@@ -130,9 +138,14 @@ angular.module('demo', [
         ];
         function openModalForDemo(shouldOpen) {
             if (shouldOpen) {
-                $scope.open();
+                $scope.$apply( function(){
+                    $scope.open();
+                })
+
             } else {
-                $scope.close();
+               $scope.$apply( function(){
+                   $scope.close();
+               })
             }
         }
 
@@ -188,9 +201,12 @@ angular.module('demo', [
         $scope.ok = function () {
 
         };
-        $scope.$on('CLOSE_MODAL', function () {
+        var cleanUpFunc = $scope.$on('CLOSE_MODAL', function () {
+            cleanUpFunc();
             $modalInstance.close();
+
         });
+
         $scope.cancel = function () {
 
         };
