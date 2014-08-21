@@ -49,7 +49,8 @@ angular.module('demo', [
             {
                 type: "title",
                 heading: "Welcome to the NG-Joyride demo",
-                text: '<div class="row"><div id="title-text" class="col-md-12"><span class="main-text">Welcome to <strong>Ng Joyride Demo</strong></span><br><span>( This demo will walk you through the features of Ng-Joyride. )</span><br/><br/><span class="small"><em>This can have custom html too !!!</em></span></div></div>'
+                text: '<div class="row"><div id="title-text" class="col-md-12"><span class="main-text">Welcome to <strong>Ng Joyride Demo</strong></span><br><span>( This demo will walk you through the features of Ng-Joyride. )</span><br/><br/><span class="small"><em>This can have custom html too !!!</em></span></div></div>',
+                curtainClass: "randomClass"
 
             },
             {
@@ -64,8 +65,9 @@ angular.module('demo', [
                 type: "element",
                 selector: "#header",
                 heading: "Step 1",
-                text: "I can come over any element",
+                text: "I can come over any element.Even the background is customizable per step",
                 placement: "bottom",
+                curtainClass: "blueColour",
                 scroll: true
             },
             {
