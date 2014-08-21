@@ -1,17 +1,17 @@
 {
   "name": "ng-joyride",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "dependencies": {
     "angular": "*",
     "jquery": "~1.10.2",
     "bootstrap": "3.2.0"
   },
   "homepage": "https://github.com/abhikmitra/ng-joyride",
-  "_release": "0.1.6",
+  "_release": "0.1.7",
   "_resolution": {
     "type": "version",
-    "tag": "0.1.6",
-    "commit": "1e37d61d9670f9270b920ed83a5505f1a5d690b3"
+    "tag": "0.1.7",
+    "commit": "e926921870bf390e0af81e74ad45a042e0f50866"
   },
   "_source": "git://github.com/abhikmitra/ng-joyride.git",
   "_target": "*",

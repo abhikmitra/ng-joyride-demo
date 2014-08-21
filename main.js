@@ -126,7 +126,7 @@ angular.module('demo', [
             },
             {
                 type: "function",
-                fn: closeModalForDemo
+                fn: 'closeModalForDemo'
             },
             {
                 type: "element",
@@ -151,7 +151,7 @@ angular.module('demo', [
             }
         }
 
-        function closeModalForDemo(shouldnotshow) {
+        $scope.closeModalForDemo = function (shouldnotshow) {
             if (shouldnotshow) {
                 $scope.close();
             } else {
