@@ -20,7 +20,7 @@ angular.module('demo', [
                 redirectTo: '/'
             });
     })
-    .controller('mainCtrl', function ($rootScope, $scope, $modal, $sce) {
+    .controller('mainCtrl', function ($rootScope, $scope, $modal, $timeout) {
         $scope.awesomeThings = [
             'HTML5 Boilerplate',
             'AngularJS',
@@ -34,6 +34,7 @@ angular.module('demo', [
             }
             count++;
             $scope.startJoyRide = true;
+
         }
         function generateAlternateConfig(){
             //This is to show that it can have dynamic configs which can change . The joyride would not need to be initialized again.
