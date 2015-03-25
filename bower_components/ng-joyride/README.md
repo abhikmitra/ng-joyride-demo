@@ -39,6 +39,11 @@ There is one directive called `ng-joy-ride` which can be used as an attribute.
 ####ng-joy-ride   
 You can invoke the joyride from anywhere by setting (in this case) `startJoyRide` to true.The scope variable that you bind to `ng-joy-ride` is the one that will control the start of the joyride. Once the joyride is complete , the scope variable gets set to false.So on completeion of the joyride `startJoyRide` will be set to false     
 
+
+### Stopping the Joyride
+
+The joyride stops when, the user presses "skip", "finish" or when  you programamtically set `startJoyRide` to false.Setting `startJoyRide` to false when the joyride is on , will have the same effect as skip.
+
 --------
 
 ### Configuring the joyride
@@ -167,6 +172,7 @@ The `element` joyride-element generates a box that looks like below.
 * `placement` ( Optional ) : Where the popover will be placed.Similar to bootstrap popover placements. The possible values are "top|bottom|right|left".
 * `scroll` : Whether you want, the page to be scrolled to the particular element.
 * `curtainClass` ( Optional ) : You can use this to pass your custom class to the joyride background.This is useful where you want the background to change in each step.
+* `attachToBody` ( Optional ) : You can use this to attach the popover to the body instead of the element.In some cases you might run into problems with css stacking context.Normally you wouldn't need to use this
 
 #####&nbsp;&nbsp; Custom `element Template`. Unlike `titleTemplate`, where each `joyride-element` can have its own `titleTemplate` ,the custom element template will have a common template.
 

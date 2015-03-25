@@ -24,7 +24,8 @@
         );
     }]);
     drctv.factory('joyrideElement', ['$timeout', '$compile', '$sce', function ($timeout, $compile, $sce) {
-        function Element(config, currentStep, template, loadTemplateFn, hasReachedEndFn, goToNextFn, goToPrevFn, skipDemoFn,isEnd, curtainClass , addClassToCurtain, shouldDisablePrevious) {
+        function Element(config, currentStep, template, loadTemplateFn, hasReachedEndFn, goToNextFn,
+                         goToPrevFn, skipDemoFn,isEnd, curtainClass , addClassToCurtain, shouldDisablePrevious, attachTobody) {
             this.currentStep = currentStep;
             this.content = $sce.trustAsHtml(config.text);
             this.selector = config.selector;
@@ -44,13 +45,14 @@
             this.curtainClass = curtainClass;
             this.addClassToCurtain = addClassToCurtain;
             this.shouldDisablePrevious = shouldDisablePrevious;
+            this.attachTobody = attachTobody;
             function _generateTextForNext() {
 
                 if (isEnd) {
 
                     return 'Finish';
                 } else {
-                    return 'Next&nbsp;<i class=\"glyphicon glyphicon-chevron-right\">'
+                    return 'Next&nbsp;<i class=\"glyphicon glyphicon-chevron-right\">';
 
                 }
             }
@@ -108,7 +110,8 @@
                     content: this.popoverTemplate,
                     html: true,
                     placement: this.placement,
-                    trigger:'manual'
+                    trigger:'manual',
+                    container: this.attachTobody? 'body' : false
                 });
                 if (this.scroll) {
                     _scrollToElement.call(this,this.selector);
@@ -156,8 +159,7 @@
             return {
                 generate: generate,
                 cleanUp: cleanUp
-
-            }
+            };
 
 
         })();
@@ -170,8 +172,7 @@
             this.currentStep = currentStep;
             this.heading = config.heading;
             this.content = $sce.trustAsHtml(config.text);
-            this.titleMainDiv = '<div id="ng-joyride-title" class="ng-joyride-title"></div>';
-            this.titleTemplateIdSelector = '#ng-joyride-title';
+            this.titleMainDiv = '<div class="ng-joyride-title"></div>';
             this.loadTemplateFn = loadTemplateFn;
             this.titleTemplate = config.titleTemplate || defaultTitleTemplate;
             this.hasReachedEndFn = hasReachedEndFn;
@@ -179,7 +180,7 @@
             this.skipDemoFn = skipDemoFn;
             this.goToPrevFn = goToPrevFn;
             this.scope = scope;
-            this.type = "title"
+            this.type = "title";
             this.curtainClass = curtainClass;
             this.addClassToCurtain = addClassToCurtain;
             this.shouldDisablePrevious = shouldDisablePrevious;
@@ -189,8 +190,8 @@
             var $fkEl;
 
             function generateTitle() {
-                $('body').append(this.titleMainDiv);
-                $fkEl = $(this.titleTemplateIdSelector);
+                $fkEl = $(this.titleMainDiv);
+                $('body').append($fkEl);
                 this.addClassToCurtain(this.curtainClass);
                 var promise = this.loadTemplateFn(this.titleTemplate);
                 promise.then(angular.bind(this,_compilePopover));
@@ -209,9 +210,9 @@
                     $('.nextBtn').html("Next&nbsp;<i class='glyphicon glyphicon-chevron-right'>");
                 }
                 $fkEl.slideDown(100, function () {
-                    $('.nextBtn').one("click",self.goToNextFn);
+                    $('.nextBtn').one("click",function(){ self.goToNextFn(200);});
                     $('.skipBtn').one("click",self.skipDemoFn);
-                    $('.prevBtn').one("click",self.goToPrevFn);
+                    $('.prevBtn').one("click",function(){ self.goToPrevFn(200);});
 
                     if(self.shouldDisablePrevious){
                         $('.prevBtn').prop('disabled', true);
@@ -233,7 +234,7 @@
             return {
                 generate: generateTitle,
                 cleanUp: cleanUp
-            }
+            };
 
         })();
 
@@ -251,7 +252,7 @@
                 this.func = config.fn;
             }
 
-            this.type = "function"
+            this.type = "function";
 
 
         }
@@ -272,7 +273,7 @@
                 generate: generateFn,
                 cleanUp: cleanUp,
                 rollback: rollback
-            }
+            };
 
         })();
 
@@ -314,8 +315,8 @@
             return {
                 generate: generateFn,
                 cleanUp: cleanUp,
-                rollback:goToPreviousPath
-            }
+                rollback: goToPreviousPath
+            };
 
         })();
 
@@ -337,10 +338,6 @@
             link: function (scope, element, attrs) {
                 var steps = [];
                 var currentStepCount = 0;
-                var options = {
-                    config : scope.config,
-                    templateUri: attrs.templateUri
-                };
 
 
                 var $fkEl;
@@ -353,11 +350,14 @@
                     }
                     return $q.when($templateCache.get(template)) || $http.get(template, { cache: true });
                 }
-                function goToNext() {
+                function goToNext(interval) {
                     if (!hasReachedEnd()) {
                         currentStepCount++;
                         cleanUpPreviousStep();
-                        generateStep();
+                        $timeout(function(){
+                            generateStep();
+                        },interval || 0);
+
                     } else {
                         endJoyride();
                         scope.onFinish();
@@ -370,25 +370,33 @@
                         scope.ngJoyRide = false;
                     });
                 }
-                function goToPrev() {
+                function goToPrev(interval) {
                     steps[currentStepCount].cleanUp();
-                    var previousStep = steps[currentStepCount - 1];
-                    if (previousStep.type === "location_change") {
-                        scope.$evalAsync(function () {
-                            previousStep.rollback();
-                        });
-                        currentStepCount = currentStepCount - 2;
-                        $timeout(generateStep, 100);
+                    var requires_timeout = false;
+                    currentStepCount -= 1;
 
-                    } else if (previousStep.type === "function") {
-                        previousStep.rollback();
-                        currentStepCount = currentStepCount - 2;
-                        $timeout(generateStep, 100);
-                    } else {
-                        currentStepCount--;
-                        generateStep();
+                    // Rollback previous steps until we hit a title or element.
+                    function rollbackSteps(s, i) {
+                        s[i].rollback();
                     }
 
+                    while ((steps[currentStepCount].type === "location_change" || steps[currentStepCount].type === "function") && currentStepCount >= 1) {
+                        requires_timeout = true;
+                        if (steps[currentStepCount].type == "location_change") {
+                            scope.$evalAsync(rollbackSteps(steps, currentStepCount));
+                        }
+                        else {
+                            steps[currentStepCount].rollback();
+                        }
+                        currentStepCount -= 1;
+                    }
+                    requires_timeout = requires_timeout || interval;
+                    if (requires_timeout) {
+                        $timeout(generateStep, interval || 100);
+                    }
+                    else {
+                        generateStep();
+                    }
                 }
 
                 function skipDemo() {
@@ -470,6 +478,11 @@
 
                 }
                 function initializeJoyride() {
+                    var options = {
+                        config : scope.config,
+                        templateUri: attrs.templateUri
+                    };
+
                     var count = -1,isFirst = true,disablePrevious;
                     steps = options.config.map(function (step) {
                         count++;
@@ -478,10 +491,10 @@
                                 return new joyrideLocationChange(step, count);
 
                             case "element":
-                                disablePrevious = isFirst
+                                disablePrevious = isFirst;
                                 isFirst = isFirst ? false:false;
 
-                                return new joyrideElement(step, count, options.templateUri, loadTemplate, hasReachedEnd, goToNext, goToPrev, skipDemo, count === (options.config.length-1),step.curtainClass,changeCurtainClass, disablePrevious);
+                                return new joyrideElement(step, count, options.templateUri, loadTemplate, hasReachedEnd, goToNext, goToPrev, skipDemo, count === (options.config.length-1),step.curtainClass,changeCurtainClass, disablePrevious ,step.attachToBody);
 
                             case "title":
                                 disablePrevious = isFirst;

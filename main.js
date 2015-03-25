@@ -38,7 +38,7 @@ angular.module('demo', [
         }
         function generateAlternateConfig(){
             //This is to show that it can have dynamic configs which can change . The joyride would not need to be initialized again.
-            $scope.config[2].text = "I can have dynamic text that can change in between joyrides"
+            $scope.config[3].text = "I can have dynamic text that can change in between joyrides"
         }
 
         $scope.config = [
@@ -55,12 +55,21 @@ angular.module('demo', [
 
             },
             {
+                type: "title",
+                heading: "Ng-joyride has new features",
+                text: '<div class="row"><div id="title-text" class="col-md-12"><span class="main-text">Support for Dynamic configs.Config object or part of the config' +
+                    ' might change after the joyride is loaded.</span><br/><span class="small"><em>You can bring your configs via ajax !!!</em></span></div></div>',
+                curtainClass: "randomClass"
+
+            },
+            {
                 type: "element",
                 selector: "#home",
                 heading: "Title can have <em>HTML</em>",
-                text: "You are in the <em>home page.</em>",
+                text: "They can also be appended to the <em> body</em>",
                 placement: "bottom",
-                scroll: true
+                scroll: true,
+                attachToBody: true
             },
             {
                 type: "element",
