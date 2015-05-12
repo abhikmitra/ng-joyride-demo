@@ -75,10 +75,36 @@ angular.module('demo', [
                 type: "element",
                 selector: "#header",
                 heading: "Step 1",
-                text: "I can come over any element.Even the background is customizable per step",
+                text: "I can come over any element.Even the background and the popover is customizable per step",
                 placement: "bottom",
                 curtainClass: "blueColour",
-                scroll: true
+                scroll: true,
+                elementTemplate: function(content,isEnd){
+                    //The joyride will invoke this function while rendering this element.
+                    //Content : The "text" to be shown in the element.
+                    //isEnd: Signifying if this is the end of the joyride so that you can style it differently.
+                    var template =
+                            '<div class=\"row custom-color\">' +
+                                '<div id=\"pop-over-text\" class=\"col-md-12\">' +
+                                    content +
+                                '</div>' +
+                            '</div>' +
+                            '<hr>' +
+                            '<div class=\"row custom-bg\">' +
+                                '<div class=\"col-md-4 center\">' +
+                                    '<a class=\"skipBtn pull-left\" type=\"button\">Skip</a>' +
+                                '</div>' +
+                                '<div class=\"col-md-8\">' +
+                                    '<div class=\"pull-right\">' +
+                                        '<button id=\"prevBtn\" class=\"prevBtn btn btn-xs\" type=\"button\">Previous</button>' +
+                                        ' <button id=\"nextBtn\" class=\"nextBtn btn btn-xs btn-primary\" type=\"button\">' +
+                                           'Next&nbsp;<i class=\"glyphicon glyphicon-chevron-right\">'
+                                        '</button>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>';
+                    return template;
+                }
             },
             {
                 type: "element",

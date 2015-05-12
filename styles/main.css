@@ -81,3 +81,10 @@ body {
 .blueColour{
     background: #428bca !important;
 }
+
+.custom-color {
+  color: #3b5998;
+}
+.custom-bg{
+  background: #F2B50F;
+}
