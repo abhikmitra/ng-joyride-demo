@@ -80,6 +80,7 @@ body {
 
 .blueColour{
     background: #428bca !important;
+    opacity: 0.2;
 }
 
 .custom-color {
