@@ -110,7 +110,7 @@ angular.module('demo', [
                 type: "element",
                 selector: "#impBtn",
                 heading: "Step 2",
-                text: "I can change placement.Instead of next you can click the button to advance",
+                text: "I can change placement.Instead of next you can click the checkbox to advance",
                 placement: "left",
                 scroll: true,
                 advanceOn: {element: '#impBtn', event: 'click'}
